@@ -37,26 +37,27 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          outputs: type=local,dest=./out
           push: true
           tags: | 
             ghcr.io/${{ github.repository }}:latest
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache,mode=max
           #platforms: linux/amd64,linux/arm64
-      - name: tar the release
-        id: tar
-        run: |
-          TAR="$(basename "${{ github.repository }}")-${{ github.ref_name }}".tgz
-          tar -zcvf "${TAR}" ./out
-          echo tarball="${TAR}" | tee "${GITHUB_OUTPUT}"
-        if: github.ref_type == 'tag'
-      #- name: Setup upterm session
-      #  uses: owenthereal/action-upterm@v1
-      #  with:
-      #    limit-access-to-users: 'b-' # Specific authorized users only
-      - name: Release
-        if: github.ref_type == 'tag'
-        uses: softprops/action-gh-release@v2
-        with:
-          files: "${{ steps.tar.outputs.tarball }}"
+#           outputs: type=local,dest=./out
+#       - name: tar the release
+#         id: tar
+#         run: |
+#           TAR="$(basename "${{ github.repository }}")-${{ github.ref_name }}".tgz
+#           tar -zcvf "${TAR}" ./out
+#           echo tarball="${TAR}" | tee "${GITHUB_OUTPUT}"
+#         if: github.ref_type == 'tag'
+#       #- name: Setup upterm session
+#       #  uses: owenthereal/action-upterm@v1
+#       #  with:
+#       #    limit-access-to-users: 'b-' # Specific authorized users only
+#       - name: Release
+#         if: github.ref_type == 'tag'
+#         uses: softprops/action-gh-release@v2
+#         with:
+#           files: "${{ steps.tar.outputs.tarball }}"
+# 
