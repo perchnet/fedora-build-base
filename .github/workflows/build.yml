@@ -2,17 +2,24 @@ name: Build and Push Image to GHCR
 
 on:
   push:
-    branches: main
+    branches:
+      - main
   release:
     types: [published]
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  LATEST_VERSION: 44
 
 concurrency: ${{ github.repository }}_${{ github.ref_name }}
 jobs:
   build-and-push-image:
+    strategy:
+      matrix:
+        base-version:
+          - 43
+          - 44
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -38,10 +45,13 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: | 
-            ghcr.io/${{ github.repository }}:latest
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache
-          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache,mode=max
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ matrix.base-version }}
+            ${{ matrix.base-version == env.LATEST_VERSION && format('ghcr.io/{0}:{1}', github.repository, 'latest') || '' }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}/buildcache:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}/buildcache:buildcache,mode=max
+          build-args: |
+            BASE_VERSION=${{ matrix.base-version }}
           #platforms: linux/amd64,linux/arm64
 #           outputs: type=local,dest=./out
 #       - name: tar the release
