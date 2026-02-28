@@ -7,6 +7,13 @@ basically you just use the template to make a new repo, and add the steps into t
 most of the steps in the Containerfile are commented out, because i use the base template itself as a base `FROM` image for repos that i use this template for. 
 
 ## examples
+
 right now the only repos i'm using this template as-is for are private, but a public example will come soon. if you use it, file an issue and i'll put your project here!
+
+## prior art
+
+i did something similar but less thought-out [here](perchnet/interception-vimproved) to build a key remapping tool as an OCI image for my bootc image
+
+much of the layout of this repo has been inspired and loosely ripped from the [zirconium](zirconium-dev/zirconium) repo. 
 
 —bri✨
